@@ -15,24 +15,24 @@ var height = 600;
 canvas.width = width;
 canvas.height = height;
 var context = canvas.getContext('2d');
-var player = new Player();
-var computer = new Computer();
+var player1 = new Player(175, 580);
+var player2 = new Player2(175, 10);
 var ball = new Ball(200, 300);
 
 var keysDown = {};
 
 var render = function() {
-	context.fillStyle = "#9ea7b8";
+	context.fillStyle = "#9e97b8";
 	context.fillRect(0, 0, width, height);
-	player.render();
-	computer.render();
+	player1.render();
+	player2.render();
 	ball.render();
 };
 
 var update = function() {
-	player.update();
-	computer.update(ball);
-	ball.update(player.paddle, computer.paddle);
+	player1.update();
+	player2.update(ball);
+	ball.update(player1.paddle, player2.paddle);
 };
 
 // step: updates, renders, animates.
@@ -70,32 +70,33 @@ Paddle.prototype.move = function (x, y) {
   	}
 };
 
-function Computer() {
-	this.paddle = new Paddle(175, 10, 50, 10);
+function Player2(x, y) {
+	this.start_x = x;
+	this.start_y = y;
+	this.paddle = new Paddle(this.start_x, this.start_y, 50, 10);
 };
 
-Computer.prototype.render = function() {
+Player2.prototype.render = function() {
 	this.paddle.render();
 };
 
-Computer.prototype.update = function(ball) {
-  var x_pos = ball.x;
-  var diff = -((this.paddle.x + (this.paddle.width / 2)) - x_pos);
-  if(diff < 0 && diff < -4) { // max speed left
-    diff = -5;
-  } else if(diff > 0 && diff > 4) { // max speed right
-    diff = 5;
-  }
-  this.paddle.move(diff, 0);
-  if(this.paddle.x < 0) {
-    this.paddle.x = 0;
-  } else if (this.paddle.x + this.paddle.width > 400) {
-    this.paddle.x = 400 - this.paddle.width;
-  }
+Player2.prototype.update = function() {
+  for (var key in keysDown) {
+		var value = Number(key);
+		if (value == 37) { // left arrow
+			this.paddle.move(-4, 0);
+		} else if (value == 39) { // right arrow
+			this.paddle.move(4,0);
+		} else {
+			this.paddle.move(0,0);
+		}
+	};
 };
 
-function Player() {
-    this.paddle = new Paddle(175, 580, 50, 10);
+function Player(x, y) {
+	this.start_x = x;
+	this.start_y = y;
+    this.paddle = new Paddle(this.start_x, this.start_y, 50, 10);
 };
 
 Player.prototype.render = function () {
@@ -105,9 +106,9 @@ Player.prototype.render = function () {
 Player.prototype.update = function () {
 	for (var key in keysDown) {
 		var value = Number(key);
-		if (value == 37) { // left arrow
+		if (value == 65) { // use a to move left
 			this.paddle.move(-4, 0);
-		} else if (value == 39) { // right arrow
+		} else if (value == 68) { // use d to move right
 			this.paddle.move(4,0);
 		} else {
 			this.paddle.move(0,0);
@@ -160,7 +161,7 @@ Ball.prototype.update = function (paddle1, paddle2) {
 			this.y += this.y_speed;
 		}
 	} else {
-		// hitting computer's paddle
+		// hitting Player2's paddle
 		if(top_y < (paddle2.y + paddle2.height) && bottom_y > paddle2.y && top_x < (paddle2.x + paddle2.width) && bottom_x > paddle2.x) {
       		this.y_speed = 3;
       		this.x_speed += (paddle2.x_speed / 2);
