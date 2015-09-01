@@ -17,7 +17,7 @@ canvas.height = height;
 var context = canvas.getContext('2d');
 var player1 = new Player(175, 580);
 var player2 = new Player2(175, 10);
-var ball = new Ball(200, 300);
+var ball = new Ball(200, 300, -6);
 
 var keysDown = {};
 
@@ -70,29 +70,6 @@ Paddle.prototype.move = function (x, y) {
   	}
 };
 
-function Player2(x, y) {
-	this.start_x = x;
-	this.start_y = y;
-	this.paddle = new Paddle(this.start_x, this.start_y, 50, 10);
-};
-
-Player2.prototype.render = function() {
-	this.paddle.render();
-};
-
-Player2.prototype.update = function() {
-  for (var key in keysDown) {
-		var value = Number(key);
-		if (value == 37) { // left arrow
-			this.paddle.move(-4, 0);
-		} else if (value == 39) { // right arrow
-			this.paddle.move(4,0);
-		} else {
-			this.paddle.move(0,0);
-		}
-	};
-};
-
 function Player(x, y) {
 	this.start_x = x;
 	this.start_y = y;
@@ -116,12 +93,33 @@ Player.prototype.update = function () {
 	};
 };
 
+function Player2(x, y) {
+	this.start_x = x;
+	this.start_y = y;
+	this.paddle = new Paddle(this.start_x, this.start_y, 50, 10);
+};
 
-function Ball(x, y) {
+Player2.prototype.render = function() {
+	this.paddle.render();
+};
+
+Player2.prototype.update = function() {
+  for (var key in keysDown) {
+		var value = Number(key);
+		if (value == 37) { // left arrow
+			this.paddle.move(-4, 0);
+		} else if (value == 39) { // right arrow
+			this.paddle.move(4,0);
+		} else {
+			this.paddle.move(0,0);
+		}
+	};
+};
+function Ball(x, y, y_speed) {
 	this.x = x;
 	this.y = y;
 	this.x_speed = 0;
-	this.y_speed = 3;
+	this.y_speed = y_speed;
 };
 
 Ball.prototype.render = function() {
@@ -149,21 +147,23 @@ Ball.prototype.update = function (paddle1, paddle2) {
 
 	if (this.y < 0 || this.y > 600) { // point scored here
 		this.x_speed = 0;
-		this.y_speed = 3;
+		// set ball to start upwards or downwards randomly
+		var zeroOrOne = Math.floor(Math.random() * 2);
+		zeroOrOne ? this.y_speed = -6 : this.y_speed = 6;
 		this.x = 200;
 		this.y = 300;
 	};
 
 	if (top_y > 300) { // hitting player's paddle
 		if(top_y < (paddle1.height + paddle1.y) && bottom_y > paddle1.y && top_x < (paddle1.x + paddle1.width) && bottom_x > paddle1.x) {
-			this.y_speed = -3;
+			this.y_speed = -6;
 			this.x_speed += (paddle1.x_speed / 2);
 			this.y += this.y_speed;
 		}
 	} else {
 		// hitting Player2's paddle
 		if(top_y < (paddle2.y + paddle2.height) && bottom_y > paddle2.y && top_x < (paddle2.x + paddle2.width) && bottom_x > paddle2.x) {
-      		this.y_speed = 3;
+      		this.y_speed = 6;
       		this.x_speed += (paddle2.x_speed / 2);
       		this.y += this.y_speed;
     	}
