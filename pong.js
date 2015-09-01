@@ -22,7 +22,7 @@ var ball = new Ball(200, 300, -6);
 var keysDown = {};
 
 var render = function() {
-	context.fillStyle = "#9e97b8";
+	context.fillStyle = "#333333";
 	context.fillRect(0, 0, width, height);
 	player1.render();
 	player2.render();
@@ -52,7 +52,7 @@ function Paddle(x, y, width, height) {
 };
 
 Paddle.prototype.render = function() {
-	context.fillStyle = "#0000FF";
+	context.fillStyle = getRandomColor();
 	context.fillRect(this.x, this.y, this.width, this.height);
 };
 
@@ -125,7 +125,7 @@ function Ball(x, y, y_speed) {
 Ball.prototype.render = function() {
 	context.beginPath();
 	context.arc(this.x, this.y, 5, 2 * Math.PI, false);
-	context.fillStyle = '#000000';
+	context.fillStyle = getRandomColor();
 	context.fill();
 };
 
@@ -170,6 +170,15 @@ Ball.prototype.update = function (paddle1, paddle2) {
   	}
 };
 
+// Add psychedelic color ability:
+function getRandomColor() {
+    var codes = '0123456789ABCDEF'.split('');
+    var color = '#';
+    for (var i = 0; i < 6; i++ ) {
+        color += codes[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
 
 document.body.appendChild(canvas);
 animate(step);
