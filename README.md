@@ -1,4 +1,4 @@
-# pong
+# Pong
 Pong clone with fun features added, including:
 
 1. two-player capability (P1 uses arrow keys, P2 uses 'a' and 'd')
