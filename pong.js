@@ -191,5 +191,5 @@ window.addEventListener('keyup', function (event) {
 	delete keysDown[event.keyCode];
 });
 
-// features: scores, two paddles on each side, two balls, horizontal, coffeescript, psychedelic changing colors as paddle re-renders. Then make the entire thing psychedelic
+// future features: scores, two paddles on each side, two balls, horizontal, coffeescript.
 
