@@ -7,6 +7,8 @@ Pong clone with fun features added, including:
 
 3. Randomized initial ball direction.
 
+![alt tag](https://github.com/bistacos/pong/blob/master/pongDemo.gif)
+
 Also being used as a template to test out a lean github pm tool, waffle.io (see badge below):
 
 [![Stories in Ready](https://badge.waffle.io/bistacos/pong.svg?label=ready&title=Ready)](http://waffle.io/bistacos/pong)
